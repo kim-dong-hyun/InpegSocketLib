@@ -7,16 +7,16 @@ using System.Net.Sockets;
 
 namespace InpegSocketLib
 {
-    public delegate void ServerConnectHandlerCallback(DXClientSession client);
-    public delegate void ServerReceiveHandlerCallback(DXClientSession client, byte[] recvBuffer, int size);
+    public delegate void ServerConnectHandlerCallback(InPegClientSession client);
+    public delegate void ServerReceiveHandlerCallback(InPegClientSession client, byte[] recvBuffer, int size);
 
-    public class DXClientSession
+    public class InPegClientSession
     {
         public Socket clientSock;
         public byte[] recvBuffer = new byte[1024 * 1024];
         public object Tag { get; set; }
 
-        public DXClientSession(Socket sock)
+        public InPegClientSession(Socket sock)
         {
             clientSock = sock;
         }
@@ -73,7 +73,7 @@ namespace InpegSocketLib
     public class InpegServerSocket : InpegSocket
     {
         protected Socket serverSock;
-        public List<DXClientSession> clientList = new List<DXClientSession>();        
+        public List<InPegClientSession> clientList = new List<InPegClientSession>();        
         public InpegTaskScheduler task = new InpegTaskScheduler();
         protected bool isRunning = false;
         protected const int BACKLOG = 1000;
@@ -121,7 +121,7 @@ namespace InpegSocketLib
             task.StopEventLoop();
             serverSock.Close();
 
-            foreach (DXClientSession client in clientList)
+            foreach (InPegClientSession client in clientList)
                 client.clientSock.Close();
             clientList.Clear();
 
@@ -134,7 +134,7 @@ namespace InpegSocketLib
             clientSock.Blocking = false;
             clientSock.NoDelay = true;
 
-            DXClientSession client = new DXClientSession(clientSock);
+            InPegClientSession client = new InPegClientSession(clientSock);
             clientList.Add(client);
             task.RegisterSocketHandler(clientSock, client.IncomingPacketHandler, this);
 
@@ -144,7 +144,7 @@ namespace InpegSocketLib
 
         public void DisconnectAllClient()
         {
-            foreach (DXClientSession client in clientList)
+            foreach (InPegClientSession client in clientList)
             {
                 client.clientSock.Shutdown(SocketShutdown.Send);
             }
