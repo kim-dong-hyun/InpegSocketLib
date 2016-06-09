@@ -69,19 +69,19 @@ namespace ServerTest
             return false;
         }
 
-        private void ClientConnectHandler(DXClientSession client)
+        private void ClientConnectHandler(InpegClientSession client)
         {
             IPEndPoint clientAddress = (IPEndPoint)client.clientSock.RemoteEndPoint;
             WriteStatusLog(string.Format("클라이언트 {0}:{1} 접속되었습니다", clientAddress.Address.ToString(), clientAddress.Port));
         }
 
-        private void ClientDisconnectHandler(DXClientSession client)
+        private void ClientDisconnectHandler(InpegClientSession client)
         {
             IPEndPoint clientAddress = (IPEndPoint)client.clientSock.RemoteEndPoint;
             WriteStatusLog(string.Format("클라이언트 {0}:{1} 접속이 끊어졌습니다", clientAddress.Address.ToString(), clientAddress.Port));
         }
 
-        private void ClientReceiveHandler(DXClientSession client, byte[] recvBuffer, int size)
+        private void ClientReceiveHandler(InpegClientSession client, byte[] recvBuffer, int size)
         {
             string strBuffer = Encoding.UTF8.GetString(recvBuffer, 0, size);
             client.Send(recvBuffer, size);

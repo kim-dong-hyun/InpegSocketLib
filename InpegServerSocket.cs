@@ -7,16 +7,16 @@ using System.Net.Sockets;
 
 namespace InpegSocketLib
 {
-    public delegate void ServerConnectHandlerCallback(InPegClientSession client);
-    public delegate void ServerReceiveHandlerCallback(InPegClientSession client, byte[] recvBuffer, int size);
+    public delegate void ServerConnectHandlerCallback(InpegClientSession client);
+    public delegate void ServerReceiveHandlerCallback(InpegClientSession client, byte[] recvBuffer, int size);
 
-    public class InPegClientSession
+    public class InpegClientSession
     {
         public Socket clientSock;
         public byte[] recvBuffer = new byte[1024 * 1024];
         public object Tag { get; set; }
 
-        public InPegClientSession(Socket sock)
+        public InpegClientSession(Socket sock)
         {
             clientSock = sock;
         }
@@ -73,7 +73,7 @@ namespace InpegSocketLib
     public class InpegServerSocket : InpegSocket
     {
         protected Socket serverSock;
-        public List<InPegClientSession> clientList = new List<InPegClientSession>();        
+        public List<InpegClientSession> clientList = new List<InpegClientSession>();        
         public InpegTaskScheduler task = new InpegTaskScheduler();
         protected bool isRunning = false;
         protected const int BACKLOG = 1000;
@@ -121,7 +121,7 @@ namespace InpegSocketLib
             task.StopEventLoop();
             serverSock.Close();
 
-            foreach (InPegClientSession client in clientList)
+            foreach (InpegClientSession client in clientList)
                 client.clientSock.Close();
             clientList.Clear();
 
@@ -134,7 +134,7 @@ namespace InpegSocketLib
             clientSock.Blocking = false;
             clientSock.NoDelay = true;
 
-            InPegClientSession client = new InPegClientSession(clientSock);
+            InpegClientSession client = new InpegClientSession(clientSock);
             clientList.Add(client);
             task.RegisterSocketHandler(clientSock, client.IncomingPacketHandler, this);
 
@@ -144,7 +144,7 @@ namespace InpegSocketLib
 
         public void DisconnectAllClient()
         {
-            foreach (InPegClientSession client in clientList)
+            foreach (InpegClientSession client in clientList)
             {
                 client.clientSock.Shutdown(SocketShutdown.Send);
             }
