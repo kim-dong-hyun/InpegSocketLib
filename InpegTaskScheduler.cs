@@ -20,7 +20,7 @@ namespace InpegSocketLib
 
     public class InpegTaskScheduler
     {
-        protected List<SocketHandler> sockList = new List<SocketHandler>();
+        protected Dictionary<Socket, SocketHandler> sockHandlerTable = new Dictionary<Socket, SocketHandler>();
         protected bool isRunning = false;
         protected Thread thread;
         protected int TIMEOUT = 1000;
@@ -33,11 +33,14 @@ namespace InpegSocketLib
         {
             lock (this)
             {
-                SocketHandler sockHandler = new SocketHandler();
-                sockHandler.sock = sock;
-                sockHandler.handler = handler;
-                sockHandler.data = data;
-                sockList.Add(sockHandler);
+                if (sock != null)
+                {
+                    SocketHandler sockHandler = new SocketHandler();
+                    sockHandler.sock = sock;
+                    sockHandler.handler = handler;
+                    sockHandler.data = data;
+                    sockHandlerTable.Add(sockHandler.sock, sockHandler);
+                }
             }
         }
 
@@ -45,13 +48,9 @@ namespace InpegSocketLib
         {
             lock (this)
             {
-                foreach (SocketHandler handler in sockList)
+                if (sock != null && sockHandlerTable.ContainsKey(sock))
                 {
-                    if (handler.sock == sock)
-                    {
-                        sockList.Remove(handler);
-                        break;
-                    }
+                    sockHandlerTable.Remove(sock);
                 }
             }
         }
@@ -63,9 +62,9 @@ namespace InpegSocketLib
                 try
                 {
                     ArrayList selectList = new ArrayList();
-                    foreach (SocketHandler handler in sockList)
+                    foreach (var handler in sockHandlerTable)
                     {
-                        selectList.Add(handler.sock);
+                        selectList.Add(handler.Key);
                     }
 
                     if (selectList.Count == 0)
@@ -78,15 +77,9 @@ namespace InpegSocketLib
 
                     foreach (Socket sock in selectList)
                     {
-                        foreach (SocketHandler handler in sockList)
-                        {
-                            if (handler.sock == sock)
-                            {
-                                handler.handler(handler.data);
-                                break;
-                            }
-                        }
-                    }
+                        var handler = sockHandlerTable[sock];
+                        if (handler != null && handler.handler != null) handler.handler(handler.data);
+                    }                    
                 }
                 catch (Exception ex)
                 {
@@ -123,7 +116,7 @@ namespace InpegSocketLib
                     thread = null;
                 }
             }
-            sockList.Clear();
+            sockHandlerTable.Clear();
         }
     }
 }
