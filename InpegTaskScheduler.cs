@@ -101,6 +101,7 @@ namespace InpegSocketLib
             if (isRunning == true) return;
 
             thread = new Thread(new ThreadStart(DoEventLoop));
+            thread.IsBackground = true;
             isRunning = true;
             thread.Start();
         }

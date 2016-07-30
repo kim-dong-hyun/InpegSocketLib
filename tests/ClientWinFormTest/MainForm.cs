@@ -77,6 +77,8 @@ namespace ClientWinFormTest
 
                 Action doAction = delegate
                 {
+                    //if (client.Connect("ipvlocal.iptime.org", int.Parse(txtServerPort.Text), 3000))
+                    //if (client.Connect("192.168.1.145", int.Parse(txtServerPort.Text), 3000))
                     if (client.Connect(IPAddress.Parse(txtServerIP.Text), int.Parse(txtServerPort.Text), 3000))
                     {
                         WriteStatusLog("서버에 접속했습니다");

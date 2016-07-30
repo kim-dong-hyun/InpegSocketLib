@@ -32,6 +32,40 @@ namespace InpegSocketLib
         {
         }
 
+        public bool Connect(string serverIP, int serverPort, int timeout)
+        {
+            try
+            {
+                IPAddress ipAddress;
+                if (IPAddress.TryParse(serverIP, out ipAddress))
+                {
+                    return Connect(ipAddress, serverPort, timeout);
+                }
+                else
+                {
+                    IPHostEntry hostEntry = Dns.GetHostEntry(serverIP);
+
+                    if (hostEntry.AddressList.Length > 0)
+                    {
+                        foreach (var address in hostEntry.AddressList)
+                        {
+                            if (Connect(address, serverPort, timeout)) return true;
+                        }
+                        return false;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.ToString());
+            }        
+            return true;
+        }
+
         public bool Connect(IPAddress serverIP, int serverPort, int timeout)
         {
             if (IsConnected == true) return false;
