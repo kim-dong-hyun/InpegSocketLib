@@ -14,13 +14,25 @@ namespace InpegSocketLib
     public class InpegClientSocket : InpegSocket
     {
         protected Socket clientSock;
+        protected object objLock = new object();
         protected InpegTaskScheduler task = new InpegTaskScheduler();
         public bool IsConnected
         {
             get
             {
-                if (clientSock == null) return false;
-                return clientSock.Connected;
+                lock (objLock)
+                {
+                    try
+                    {
+                        if (clientSock == null) return false;
+                        return clientSock.Connected;
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.ToString());
+                        return false;
+                    }
+                }
             }
         }
         protected byte[] recvBuffer = new byte[1024 * 1024];
@@ -34,105 +46,117 @@ namespace InpegSocketLib
 
         public bool Connect(string serverIP, int serverPort, int timeout)
         {
-            try
+            lock (objLock)
             {
-                IPAddress ipAddress;
-                if (IPAddress.TryParse(serverIP, out ipAddress))
+                try
                 {
-                    return Connect(ipAddress, serverPort, timeout);
-                }
-                else
-                {
-                    IPHostEntry hostEntry = Dns.GetHostEntry(serverIP);
-
-                    if (hostEntry.AddressList.Length > 0)
+                    IPAddress ipAddress;
+                    if (IPAddress.TryParse(serverIP, out ipAddress))
                     {
-                        foreach (var address in hostEntry.AddressList)
-                        {
-                            if (Connect(address, serverPort, timeout)) return true;
-                        }
-                        return false;
+                        return Connect(ipAddress, serverPort, timeout);
                     }
                     else
                     {
-                        return false;
+                        IPHostEntry hostEntry = Dns.GetHostEntry(serverIP);
+
+                        if (hostEntry.AddressList.Length > 0)
+                        {
+                            foreach (var address in hostEntry.AddressList)
+                            {
+                                if (Connect(address, serverPort, timeout)) return true;
+                            }
+                            return false;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex.ToString());
+                }
+                return true;
             }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
-            }        
-            return true;
         }
 
         public bool Connect(IPAddress serverIP, int serverPort, int timeout)
         {
-            if (IsConnected == true) return false;
-
-            if (clientSock != null)
+            lock (objLock)
             {
-                task.UnregisterSocketHandler(clientSock);
-                CloseSocket();
-            }
+                if (IsConnected == true) return false;
 
-            clientSock = CreateSocket(ProtocolType.Tcp);
-            clientSock.Blocking = false;
-            clientSock.NoDelay = true;
-
-            try
-            {
-                clientSock.Connect(serverIP, serverPort);
-
-                task.RegisterSocketHandler(clientSock, IncomingPacketHandler, null);
-                task.StartEventLoop();
-
-                return true;
-            }
-            catch (SocketException ex)
-            {                
-                if (ex.SocketErrorCode == SocketError.WouldBlock)
+                if (clientSock != null)
                 {
-                    ArrayList selectArray = new ArrayList();
-                    selectArray.Add(clientSock);
+                    task.UnregisterSocketHandler(clientSock);
+                    CloseSocket();
+                }
 
-                    Socket.Select(null, selectArray, null, timeout * 1000);
+                clientSock = CreateSocket(ProtocolType.Tcp);
+                clientSock.Blocking = false;
+                clientSock.NoDelay = true;
 
-                    if (selectArray.Count == 0)
-                        goto connect_fail;
+                try
+                {
+                    clientSock.Connect(serverIP, serverPort);
 
                     task.RegisterSocketHandler(clientSock, IncomingPacketHandler, null);
                     task.StartEventLoop();
+
                     return true;
                 }
+                catch (SocketException ex)
+                {
+                    if (ex.SocketErrorCode == SocketError.WouldBlock)
+                    {
+                        ArrayList selectArray = new ArrayList();
+                        selectArray.Add(clientSock);
 
-            connect_fail:
-                CloseSocket();
-                Trace.WriteLine(ex.ToString());
-                return false;
-            }
-            catch (Exception ex)
-            {                
-                CloseSocket();
-                Trace.WriteLine(ex.ToString());
-                return false;
+                        Socket.Select(null, selectArray, null, timeout * 1000);
+
+                        if (selectArray.Count == 0)
+                            goto connect_fail;
+
+                        task.RegisterSocketHandler(clientSock, IncomingPacketHandler, null);
+                        task.StartEventLoop();
+                        return true;
+                    }
+
+                connect_fail:
+                    CloseSocket();
+                    Trace.WriteLine(ex.ToString());
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    CloseSocket();
+                    Trace.WriteLine(ex.ToString());
+                    return false;
+                }
             }
         }
 
         protected void CloseSocket()
         {
-            if (clientSock != null)
+            lock (objLock)
             {
-                clientSock.Close();
-                clientSock = null;
+                if (clientSock != null)
+                {
+                    clientSock.Close();
+                    clientSock = null;
+                }
             }
         }
 
         public void Disconnect()
         {
-            task.UnregisterSocketHandler(clientSock);
-            CloseSocket();
-            task.StopEventLoop();
+            lock (objLock)
+            {
+                task.UnregisterSocketHandler(clientSock);
+                CloseSocket();
+                task.StopEventLoop();
+            }
         }
 
         private void IncomingPacketHandler(object data)

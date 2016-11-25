@@ -73,6 +73,7 @@ namespace ServerWinFormTest
         {
             string strBuffer = Encoding.UTF8.GetString(recvBuffer, 0, size);
             client.Send(recvBuffer, size);
+            strBuffer = strBuffer.Trim((char)0x00);
             strBuffer += "\r\n";
             WriteReceiveData(strBuffer);
         }
