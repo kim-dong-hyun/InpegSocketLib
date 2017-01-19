@@ -31,7 +31,7 @@ namespace InpegSocketLib
 
         public void RegisterSocketHandler(Socket sock, SocketReadHandlerCallback handler, object data)
         {
-            lock (this)
+            lock (sockHandlerTable)
             {
                 if (sock != null)
                 {
@@ -46,7 +46,7 @@ namespace InpegSocketLib
 
         public void UnregisterSocketHandler(Socket sock)
         {
-            lock (this)
+            lock (sockHandlerTable)
             {
                 if (sock != null && sockHandlerTable.ContainsKey(sock))
                 {
@@ -57,7 +57,7 @@ namespace InpegSocketLib
 
         protected void SingleStep()
         {
-            lock (this)
+            lock (sockHandlerTable)
             {
                 try
                 {
