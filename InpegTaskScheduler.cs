@@ -23,7 +23,7 @@ namespace InpegSocketLib
         protected Dictionary<Socket, SocketHandler> sockHandlerTable = new Dictionary<Socket, SocketHandler>();
         protected bool isRunning = false;
         protected Thread thread;
-        protected int TIMEOUT = 1000000;
+        protected int TIMEOUT = 10000;
 
         public InpegTaskScheduler()
         {

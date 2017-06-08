@@ -72,7 +72,12 @@ namespace ServerWinFormTest
         private void ClientReceiveHandler(InpegClientSession client, byte[] recvBuffer, int size)
         {
             string strBuffer = Encoding.UTF8.GetString(recvBuffer, 0, size);
+#if false
             client.Send(recvBuffer, size);
+#else
+            byte[] buffer = new byte[6] { 0x00, 0x00, 0x00, 0x02, 0x4F, 0x4B };
+            client.Send(buffer, buffer.Length);
+#endif
             strBuffer = strBuffer.Trim((char)0x00);
             strBuffer += "\r\n";
             WriteReceiveData(strBuffer);
