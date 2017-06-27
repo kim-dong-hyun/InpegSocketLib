@@ -150,11 +150,12 @@ namespace InpegSocketLib
                 int ret = clientSock.Receive(recvBuffer, 0, recvBuffer.Length, SocketFlags.None);
                 if (ret <= 0)
                 {
-                    task.UnregisterSocketHandler(clientSock);
-                    CloseSocket();
+                    task.UnregisterSocketHandler(clientSock);                    
 
                     if (DisconnectHandler != null)
                         DisconnectHandler(clientSock);
+
+                    CloseSocket();
 
                     task.StopEventLoop();
                 }
