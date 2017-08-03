@@ -171,11 +171,12 @@ namespace InpegSocketLib
 
                 if (ex.SocketErrorCode == SocketError.ConnectionAborted || ex.SocketErrorCode == SocketError.ConnectionReset)
                 {
-                    task.UnregisterSocketHandler(clientSock);
-                    CloseSocket();
+                    task.UnregisterSocketHandler(clientSock);                    
 
                     if (DisconnectHandler != null)
                         DisconnectHandler(clientSock);
+
+                    CloseSocket();
 
                     task.StopEventLoop();
                 }
