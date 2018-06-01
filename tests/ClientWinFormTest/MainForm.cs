@@ -40,6 +40,10 @@ namespace ClientWinFormTest
             Action doAction = delegate
             {
                 txtReceiveData.Text += message;
+                
+                byte[] bytes = Encoding.ASCII.GetBytes(message);
+                for (int i = 0; i < bytes.Length; i++)
+                    txtReceiveDataHex.Text += string.Format("0x{0:X2} ", bytes[i]);
             };
 
             if (this.InvokeRequired) this.BeginInvoke(doAction);
@@ -77,8 +81,6 @@ namespace ClientWinFormTest
 
                 Action doAction = delegate
                 {
-                    //if (client.Connect("ipvlocal.iptime.org", int.Parse(txtServerPort.Text), 3000))
-                    //if (client.Connect("192.168.1.145", int.Parse(txtServerPort.Text), 3000))
                     if (client.Connect(IPAddress.Parse(txtServerIP.Text), int.Parse(txtServerPort.Text), 3000))
                     {
                         WriteStatusLog("서버에 접속했습니다");
@@ -112,6 +114,29 @@ namespace ClientWinFormTest
             }
         }
 
+        private void btnSendHex_Click(object sender, EventArgs e)
+        {
+            if (client.IsConnected)
+            {
+                try
+                {
+                    string[] strTokens = txtSendDataHex.Text.Trim().Split(' ');
+                    byte[] bytes = new byte[strTokens.Length];
+                    
+                    for (int i = 0; i < strTokens.Length; i++)
+                    {
+                        bytes[i] = (byte)Convert.ToInt32(strTokens[i], 16);
+                    }
+
+                    int ret = client.Send(bytes, bytes.Length);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+        }
+
         private void btnStatusClear_Click(object sender, EventArgs e)
         {
             listBoxStatus.Items.Clear();
@@ -120,6 +145,7 @@ namespace ClientWinFormTest
         private void btnReceiveDataClear_Click(object sender, EventArgs e)
         {
             txtReceiveData.Text = "";
+            txtReceiveDataHex.Text = "";
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

@@ -42,6 +42,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.btnReceiveDataClear = new System.Windows.Forms.Button();
             this.txtReceiveData = new System.Windows.Forms.TextBox();
+            this.txtReceiveDataHex = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtSendDataHex = new System.Windows.Forms.TextBox();
+            this.btnSendHex = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -117,7 +121,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 145);
+            this.label4.Location = new System.Drawing.Point(16, 168);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 8;
@@ -125,7 +129,7 @@
             // 
             // btnStatusClear
             // 
-            this.btnStatusClear.Location = new System.Drawing.Point(410, 140);
+            this.btnStatusClear.Location = new System.Drawing.Point(408, 163);
             this.btnStatusClear.Name = "btnStatusClear";
             this.btnStatusClear.Size = new System.Drawing.Size(75, 23);
             this.btnStatusClear.TabIndex = 9;
@@ -137,15 +141,15 @@
             // 
             this.listBoxStatus.FormattingEnabled = true;
             this.listBoxStatus.ItemHeight = 12;
-            this.listBoxStatus.Location = new System.Drawing.Point(16, 173);
+            this.listBoxStatus.Location = new System.Drawing.Point(14, 193);
             this.listBoxStatus.Name = "listBoxStatus";
-            this.listBoxStatus.Size = new System.Drawing.Size(469, 184);
+            this.listBoxStatus.Size = new System.Drawing.Size(469, 136);
             this.listBoxStatus.TabIndex = 10;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(18, 382);
+            this.label5.Location = new System.Drawing.Point(16, 354);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(65, 12);
             this.label5.TabIndex = 11;
@@ -153,7 +157,7 @@
             // 
             // btnReceiveDataClear
             // 
-            this.btnReceiveDataClear.Location = new System.Drawing.Point(410, 377);
+            this.btnReceiveDataClear.Location = new System.Drawing.Point(408, 349);
             this.btnReceiveDataClear.Name = "btnReceiveDataClear";
             this.btnReceiveDataClear.Size = new System.Drawing.Size(75, 23);
             this.btnReceiveDataClear.TabIndex = 12;
@@ -163,17 +167,55 @@
             // 
             // txtReceiveData
             // 
-            this.txtReceiveData.Location = new System.Drawing.Point(18, 412);
+            this.txtReceiveData.Location = new System.Drawing.Point(16, 375);
             this.txtReceiveData.Multiline = true;
             this.txtReceiveData.Name = "txtReceiveData";
-            this.txtReceiveData.Size = new System.Drawing.Size(467, 187);
+            this.txtReceiveData.Size = new System.Drawing.Size(467, 123);
             this.txtReceiveData.TabIndex = 13;
+            // 
+            // txtReceiveDataHex
+            // 
+            this.txtReceiveDataHex.Location = new System.Drawing.Point(16, 504);
+            this.txtReceiveDataHex.Multiline = true;
+            this.txtReceiveDataHex.Name = "txtReceiveDataHex";
+            this.txtReceiveDataHex.Size = new System.Drawing.Size(467, 123);
+            this.txtReceiveDataHex.TabIndex = 14;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(16, 132);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(57, 12);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "전송 HEX";
+            // 
+            // txtSendDataHex
+            // 
+            this.txtSendDataHex.Location = new System.Drawing.Point(79, 129);
+            this.txtSendDataHex.Name = "txtSendDataHex";
+            this.txtSendDataHex.Size = new System.Drawing.Size(321, 21);
+            this.txtSendDataHex.TabIndex = 16;
+            // 
+            // btnSendHex
+            // 
+            this.btnSendHex.Location = new System.Drawing.Point(410, 127);
+            this.btnSendHex.Name = "btnSendHex";
+            this.btnSendHex.Size = new System.Drawing.Size(75, 23);
+            this.btnSendHex.TabIndex = 17;
+            this.btnSendHex.Text = "전송";
+            this.btnSendHex.UseVisualStyleBackColor = true;
+            this.btnSendHex.Click += new System.EventHandler(this.btnSendHex_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(497, 611);
+            this.ClientSize = new System.Drawing.Size(497, 639);
+            this.Controls.Add(this.btnSendHex);
+            this.Controls.Add(this.txtSendDataHex);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtReceiveDataHex);
             this.Controls.Add(this.txtReceiveData);
             this.Controls.Add(this.btnReceiveDataClear);
             this.Controls.Add(this.label5);
@@ -212,6 +254,10 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnReceiveDataClear;
         private System.Windows.Forms.TextBox txtReceiveData;
+        private System.Windows.Forms.TextBox txtReceiveDataHex;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtSendDataHex;
+        private System.Windows.Forms.Button btnSendHex;
     }
 }
 
