@@ -39,6 +39,7 @@
     <Compile Include="InpegServerSocket.cs" />
     <Compile Include="InpegSocket.cs" />
     <Compile Include="InpegTaskScheduler.cs" />
+    <Compile Include="InpegUDPSocket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

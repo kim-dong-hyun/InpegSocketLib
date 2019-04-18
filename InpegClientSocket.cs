@@ -13,16 +13,14 @@ namespace InpegSocketLib
 
     public class InpegClientSocket : InpegSocket
     {
-        protected Socket clientSock;
-        protected InpegTaskScheduler task = new InpegTaskScheduler();
         public bool IsConnected
         {
             get
             {
                 try
                 {
-                    if (clientSock == null) return false;
-                    return clientSock.Connected;
+                    if (socket == null) return false;
+                    return socket.Connected;
                 }
                 catch (Exception ex)
                 {
@@ -78,21 +76,21 @@ namespace InpegSocketLib
         {
             if (IsConnected == true) return false;
 
-            if (clientSock != null)
+            if (socket != null)
             {
-                task.UnregisterSocketHandler(clientSock);
+                task.UnregisterSocketHandler(socket);
                 CloseSocket();
             }
 
-            clientSock = CreateSocket(ProtocolType.Tcp);
-            clientSock.Blocking = false;
-            clientSock.NoDelay = true;
+            socket = CreateSocket(ProtocolType.Tcp);
+            socket.Blocking = false;
+            socket.NoDelay = true;
 
             try
             {
-                clientSock.Connect(serverIP, serverPort);
+                socket.Connect(serverIP, serverPort);
 
-                task.RegisterSocketHandler(clientSock, IncomingPacketHandler, null);
+                task.RegisterSocketHandler(socket, IncomingPacketHandler, null);
                 task.StartEventLoop();
 
                 return true;
@@ -102,14 +100,14 @@ namespace InpegSocketLib
                 if (ex.SocketErrorCode == SocketError.WouldBlock)
                 {
                     ArrayList selectArray = new ArrayList();
-                    selectArray.Add(clientSock);
+                    selectArray.Add(socket);
 
                     Socket.Select(null, selectArray, null, timeout * 1000);
 
                     if (selectArray.Count == 0)
                         goto connect_fail;
 
-                    task.RegisterSocketHandler(clientSock, IncomingPacketHandler, null);
+                    task.RegisterSocketHandler(socket, IncomingPacketHandler, null);
                     task.StartEventLoop();
                     return true;
                 }
@@ -127,18 +125,9 @@ namespace InpegSocketLib
             }
         }
 
-        protected void CloseSocket()
-        {
-            if (clientSock != null)
-            {
-                clientSock.Close();
-                clientSock = null;
-            }
-        }
-
         public void Disconnect()
         {
-            task.UnregisterSocketHandler(clientSock);
+            task.UnregisterSocketHandler(socket);
             CloseSocket();
             task.StopEventLoop();
         }
@@ -147,13 +136,13 @@ namespace InpegSocketLib
         {
             try
             {
-                int ret = clientSock.Receive(recvBuffer, 0, recvBuffer.Length, SocketFlags.None);
+                int ret = socket.Receive(recvBuffer, 0, recvBuffer.Length, SocketFlags.None);
                 if (ret <= 0)
                 {
-                    task.UnregisterSocketHandler(clientSock);                    
+                    task.UnregisterSocketHandler(socket);                    
 
                     if (DisconnectHandler != null)
-                        DisconnectHandler(clientSock);
+                        DisconnectHandler(socket);
 
                     CloseSocket();
 
@@ -162,7 +151,7 @@ namespace InpegSocketLib
                 else
                 {
                     if (ReceiveHandler != null)
-                        ReceiveHandler(clientSock, recvBuffer, ret);
+                        ReceiveHandler(socket, recvBuffer, ret);
                 }
             }
             catch (SocketException ex)
@@ -171,10 +160,10 @@ namespace InpegSocketLib
 
                 if (ex.SocketErrorCode == SocketError.ConnectionAborted || ex.SocketErrorCode == SocketError.ConnectionReset)
                 {
-                    task.UnregisterSocketHandler(clientSock);                    
+                    task.UnregisterSocketHandler(socket);                    
 
                     if (DisconnectHandler != null)
-                        DisconnectHandler(clientSock);
+                        DisconnectHandler(socket);
 
                     CloseSocket();
 
@@ -192,7 +181,7 @@ namespace InpegSocketLib
             try
             {
                 if (IsConnected == false) return 0;
-                return WriteSocket(clientSock, buffer, size);
+                return WriteSocket(socket, buffer, size);
             }
             catch (Exception ex)
             {

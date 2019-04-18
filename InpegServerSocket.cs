@@ -30,7 +30,7 @@ namespace InpegSocketLib
                 int ret = clientSock.Receive(recvBuffer, 0, recvBuffer.Length, SocketFlags.None);
                 if (ret <= 0)
                 {
-                    server.task.UnregisterSocketHandler(clientSock);
+                    server.Task.UnregisterSocketHandler(clientSock);
                     server.clientList.Remove(this);
                     if (server.ClientDisconnectHandler != null)
                         server.ClientDisconnectHandler(this);
@@ -45,8 +45,9 @@ namespace InpegSocketLib
             {
                 Trace.WriteLine(ex.ToString());
 
-                server.task.UnregisterSocketHandler(clientSock);
+                server.Task.UnregisterSocketHandler(clientSock);
                 server.clientList.Remove(this);
+
                 if (server.ClientDisconnectHandler != null)
                     server.ClientDisconnectHandler(this);
             }
@@ -72,9 +73,9 @@ namespace InpegSocketLib
 
     public class InpegServerSocket : InpegSocket
     {
-        protected Socket serverSock;
+        public InpegTaskScheduler Task { get { return task;  } }
+
         public List<InpegClientSession> clientList = new List<InpegClientSession>();        
-        public InpegTaskScheduler task = new InpegTaskScheduler();
         protected bool isRunning = false;
         protected const int BACKLOG = 1000;
 
@@ -95,12 +96,12 @@ namespace InpegSocketLib
                 if (isRunning == true) return false;
 
                 IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Any, port);
-                serverSock = CreateSocket(ProtocolType.Tcp);
-                serverSock.Blocking = false;
-                serverSock.Bind(serverEndPoint);
-                serverSock.Listen(BACKLOG);
+                socket = CreateSocket(ProtocolType.Tcp);
+                socket.Blocking = false;
+                socket.Bind(serverEndPoint);
+                socket.Listen(BACKLOG);
 
-                task.RegisterSocketHandler(serverSock, IncomingConnectionHandler, null);
+                task.RegisterSocketHandler(socket, IncomingConnectionHandler, null);
                 task.StartEventLoop();
 
                 isRunning = true;
@@ -119,7 +120,7 @@ namespace InpegSocketLib
             if (isRunning == false) return;
 
             task.StopEventLoop();
-            serverSock.Close();
+            CloseSocket();
 
             foreach (InpegClientSession client in clientList)
                 client.clientSock.Close();
@@ -130,7 +131,7 @@ namespace InpegSocketLib
 
         private void IncomingConnectionHandler(object data)
         {
-            Socket clientSock = serverSock.Accept();
+            Socket clientSock = socket.Accept();
             clientSock.Blocking = false;
             clientSock.NoDelay = true;
 

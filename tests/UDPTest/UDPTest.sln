@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerWinFormTest", "ServerWinFormTest.csproj", "{F889B291-A014-4F04-8D59-2AC83D7D0318}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UDPTest", "UDPTest.csproj", "{A8B6AB26-9285-49F2-8DED-260E00C25B9F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3B36483C-8CB0-412E-97E8-973657B899B5} = {3B36483C-8CB0-412E-97E8-973657B899B5}
 	EndProjectSection
@@ -16,10 +16,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F889B291-A014-4F04-8D59-2AC83D7D0318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F889B291-A014-4F04-8D59-2AC83D7D0318}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F889B291-A014-4F04-8D59-2AC83D7D0318}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F889B291-A014-4F04-8D59-2AC83D7D0318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8B6AB26-9285-49F2-8DED-260E00C25B9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8B6AB26-9285-49F2-8DED-260E00C25B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8B6AB26-9285-49F2-8DED-260E00C25B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8B6AB26-9285-49F2-8DED-260E00C25B9F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B36483C-8CB0-412E-97E8-973657B899B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B36483C-8CB0-412E-97E8-973657B899B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B36483C-8CB0-412E-97E8-973657B899B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,6 +29,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {64FA26AC-F4D2-4A28-B38F-486E73877911}
+		SolutionGuid = {841AC6B6-8FF9-4345-9CE0-6B135F740F4F}
 	EndGlobalSection
 EndGlobal

@@ -10,6 +10,10 @@ namespace InpegSocketLib
 {
     public abstract class InpegSocket
     {
+        protected Socket socket;
+
+        protected InpegTaskScheduler task = new InpegTaskScheduler();
+
         protected InpegSocket()
         {
         }
@@ -24,6 +28,15 @@ namespace InpegSocketLib
                 sock = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
             return sock;
+        }
+
+        public void CloseSocket()
+        {
+            if (socket != null)
+            {
+                socket.Close();
+                socket = null;
+            }
         }
 
         protected ArrayList BlockUntilReadable(Socket sock, int timeout)

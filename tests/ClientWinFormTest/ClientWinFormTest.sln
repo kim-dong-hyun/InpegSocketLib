@@ -1,7 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientWinFormTest", "ClientWinFormTest.csproj", "{F5C05D75-D25D-4D01-8B43-87D78E780B1D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3B36483C-8CB0-412E-97E8-973657B899B5} = {3B36483C-8CB0-412E-97E8-973657B899B5}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InpegSocketLib", "..\..\InpegSocketLib.csproj", "{3B36483C-8CB0-412E-97E8-973657B899B5}"
 EndProject
@@ -22,5 +27,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5273032D-E864-4709-AF44-08229B04B7A0}
 	EndGlobalSection
 EndGlobal
