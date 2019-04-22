@@ -39,10 +39,11 @@ namespace UDPTest
         {
             Action doAction = delegate
             {
-                txtReceiveData.Text += message;
+                txtReceiveData.Text += message + "\r\n";
 
                 for (int i = 0; i < size; i++)
-                    txtReceiveDataHex.Text += string.Format("0x{0:X2} ", buffer[i]);
+                    txtReceiveDataHex.Text += string.Format("{0:X2} ", buffer[i]);
+                txtReceiveDataHex.Text += "\r\n";                         
             };
 
             if (this.InvokeRequired) this.BeginInvoke(doAction);
@@ -52,7 +53,6 @@ namespace UDPTest
         private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size)
         {
             string strBuffer = Encoding.UTF8.GetString(recvBuffer, 0, size);
-            strBuffer += "\r\n";
             WriteReceiveData(strBuffer, recvBuffer, size);
         }
 
@@ -77,9 +77,9 @@ namespace UDPTest
                 }
             }
             else
-            {
-                sock.CloseSocket();
+            {                
                 sock.StopRecv();
+                sock.CloseSocket();
 
                 WriteStatusLog("UDP 포트 닫음");
                 btnOpenCloseRecv.Text = "열기";
@@ -136,9 +136,9 @@ namespace UDPTest
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            sock.CloseSocket();
+        {            
             sock.StopRecv();
+            sock.CloseSocket();
         }
     }
 }
