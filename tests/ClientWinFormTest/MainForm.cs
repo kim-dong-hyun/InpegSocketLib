@@ -35,16 +35,16 @@ namespace ClientWinFormTest
             else doAction();
         }
 
-        private void WriteReceiveData(string message)
+        private void WriteReceiveData(string message, byte[] buffer, int size)
         {
             Action doAction = delegate
             {
-                txtReceiveData.Text += message;
+                txtReceiveData.Text += message + "\r\n";
                 
-                byte[] bytes = Encoding.ASCII.GetBytes(message);
-                for (int i = 0; i < bytes.Length; i++)
-                    txtReceiveDataHex.Text += string.Format("0x{0:X2} ", bytes[i]);
-            };
+                for (int i = 0; i < size; i++)
+                    txtReceiveDataHex.Text += string.Format("{0:X2} ", buffer[i]);
+                txtReceiveDataHex.Text += "\r\n";
+           };
 
             if (this.InvokeRequired) this.BeginInvoke(doAction);
             else doAction();
@@ -53,8 +53,7 @@ namespace ClientWinFormTest
         private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size)
         {
             string strBuffer = Encoding.UTF8.GetString(recvBuffer, 0, size);
-            strBuffer += "\r\n";
-            WriteReceiveData(strBuffer);
+            WriteReceiveData(strBuffer, recvBuffer, size);
         }
 
         private void DisconnectHandler(Socket sock)
