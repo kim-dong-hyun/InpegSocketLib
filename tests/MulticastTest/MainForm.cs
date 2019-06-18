@@ -23,9 +23,12 @@ namespace MulticastTest
         public MainForm()
         {
             InitializeComponent();
+
+            SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
+            UpdateStyles();
         }
 
-        private void WriteStatusLog(string message)
+    private void WriteStatusLog(string message)
         {
             Action doAction = delegate
             {
@@ -41,12 +44,14 @@ namespace MulticastTest
         {
             Action doAction = delegate
             {
-                txtReceiveDataHex.Text += string.Format("size : {0} ", size);
-                if (size > 20) size = 20;
+                string text = "";
+                text += string.Format("size : {0} ", size);
 
                 for (int i = 0; i < size; i++)
-                    txtReceiveDataHex.Text += string.Format("{0:X2} ", buffer[i]);
-                txtReceiveDataHex.Text += "\r\n";
+                    text += string.Format("{0:X2} ", buffer[i]);
+                text += "\r\n";
+
+                txtReceiveDataHex.Text = txtReceiveDataHex.Text.Insert(0, text);
 
                 Interlocked.Decrement(ref receiveCount);
             };
@@ -64,7 +69,7 @@ namespace MulticastTest
             WriteReceiveData(recvBuffer, size);
 
             Console.WriteLine("size : {0}", size);
-            if (size > 100) size = 100;
+
             for (int i = 0; i < size; i++)
                 Console.Write("{0:X2} ", recvBuffer[i]);
             Console.WriteLine();
@@ -75,21 +80,28 @@ namespace MulticastTest
         {
             if (!sock.IsOpened)
             {
-                string ip = textRecvIP.Text.Trim();
-                int port = int.Parse(textRecvPort.Text.Trim());
-
-                if (sock.CreateSocket(ip, port))
+                try
                 {
-                    sock.ReceiveHandler = ReceiveHandler;
-                    sock.StartRecv();
+                    string ip = textRecvIP.Text.Trim();
+                    int port = int.Parse(textRecvPort.Text.Trim());
 
-                    WriteStatusLog(string.Format("멀티캐스트 수신 {0}:{1} 열기 성공", ip, port));
-                    btnOpenClose.Text = "닫기";
+                    if (sock.CreateSocket(ip, port, checkExclusive.Checked))
+                    {
+                        sock.ReceiveHandler = ReceiveHandler;
+                        sock.StartRecv();
+
+                        WriteStatusLog(string.Format("멀티캐스트 수신 {0}:{1} 열기 성공", ip, port));
+                        btnOpenClose.Text = "닫기";
+                    }
+                    else
+                    {
+                        WriteStatusLog(string.Format("멀티캐스트 수신 {0}:{1} 열기 실패", ip, port));
+                        btnOpenClose.Text = "열기";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    WriteStatusLog(string.Format("멀티캐스트 수신 {0}:{1} 열기 실패", ip, port));
-                    btnOpenClose.Text = "열기";
+                    MessageBox.Show(this, string.Format("멀티캐스트 열기 실패\n{0}", ex.ToString()));
                 }
             }
             else

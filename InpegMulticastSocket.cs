@@ -55,18 +55,21 @@ namespace InpegSocketLib
         {
         }
 
-        public bool CreateSocket(string multicastIP, int port)
+        public bool CreateSocket(string multicastIP, int port, bool exclusive)
         {
             try
             {                
                 socket = CreateSocket(ProtocolType.Udp);
                 socket.Blocking = false;
+                socket.ExclusiveAddressUse = exclusive;
+
+                //if (!exclusive) socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
 
                 IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port);
                 socket.Bind(endpoint);
 
                 IPAddress ip = IPAddress.Parse(multicastIP);
-                socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ip, IPAddress.Any));
+                socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ip, IPAddress.Any));                
 
                 return true;
             }

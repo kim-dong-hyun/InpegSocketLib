@@ -52,7 +52,7 @@
             // 
             // txtSendPort
             // 
-            this.txtSendPort.Location = new System.Drawing.Point(270, 50);
+            this.txtSendPort.Location = new System.Drawing.Point(297, 50);
             this.txtSendPort.Name = "txtSendPort";
             this.txtSendPort.Size = new System.Drawing.Size(100, 21);
             this.txtSendPort.TabIndex = 8;
@@ -61,7 +61,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(205, 53);
+            this.label2.Location = new System.Drawing.Point(232, 53);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 12);
             this.label2.TabIndex = 7;
@@ -71,7 +71,7 @@
             // 
             this.txtSendIP.Location = new System.Drawing.Point(76, 50);
             this.txtSendIP.Name = "txtSendIP";
-            this.txtSendIP.Size = new System.Drawing.Size(100, 21);
+            this.txtSendIP.Size = new System.Drawing.Size(139, 21);
             this.txtSendIP.TabIndex = 6;
             this.txtSendIP.Text = "127.0.0.1";
             // 

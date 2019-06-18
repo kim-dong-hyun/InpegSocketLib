@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,9 +19,14 @@ namespace UDPTest
     {
         private InpegUDPSocket sock = new InpegUDPSocket();
 
+        private long receiveCount = 0;
+
         public MainForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
+
+            SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
+            UpdateStyles();
         }
 
         private void WriteStatusLog(string message)
@@ -35,25 +41,40 @@ namespace UDPTest
             else doAction();
         }
 
-        private void WriteReceiveData(string message, byte[] buffer, int size)
+        private void WriteReceiveData(byte[] buffer, int size)
         {
             Action doAction = delegate
             {
-                txtReceiveData.Text += message + "\r\n";
+                string text = "";
+                text += string.Format("size : {0} ", size);
 
                 for (int i = 0; i < size; i++)
-                    txtReceiveDataHex.Text += string.Format("{0:X2} ", buffer[i]);
-                txtReceiveDataHex.Text += "\r\n";                         
+                    text += string.Format("{0:X2} ", buffer[i]);
+                text += "\r\n";
+
+                txtReceiveDataHex.Text = txtReceiveDataHex.Text.Insert(0, text);
+
+                Interlocked.Decrement(ref receiveCount);
             };
 
-            if (this.InvokeRequired) this.BeginInvoke(doAction);
-            else doAction();
+            if (Interlocked.Read(ref receiveCount) == 0)
+            {
+                Interlocked.Increment(ref receiveCount);
+                if (this.InvokeRequired) this.BeginInvoke(doAction);
+                else doAction();
+            }
         }
 
         private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size)
         {
-            string strBuffer = Encoding.UTF8.GetString(recvBuffer, 0, size);
-            WriteReceiveData(strBuffer, recvBuffer, size);
+            WriteReceiveData(recvBuffer, size);
+
+            Console.WriteLine("size : {0}", size);
+
+            for (int i = 0; i < size; i++)
+                Console.Write("{0:X2} ", recvBuffer[i]);
+            Console.WriteLine();
+            Console.WriteLine("--------------------------------------------------------");
         }
 
         private void BtnOpenCloseRecv_Click(object sender, EventArgs e)
