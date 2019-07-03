@@ -9,7 +9,7 @@ using System.Collections;
 namespace InpegSocketLib
 {
     public delegate void ClientConnectHandlerCallback(Socket sock);
-    public delegate void ClientReceiveHandlerCallback(Socket sock, byte[] recvBuffer, int size);
+    public delegate void ClientReceiveHandlerCallback(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote);
 
     public class InpegClientSocket : InpegSocket
     {
@@ -151,7 +151,7 @@ namespace InpegSocketLib
                 else
                 {
                     if (ReceiveHandler != null)
-                        ReceiveHandler(socket, recvBuffer, ret);
+                        ReceiveHandler(socket, recvBuffer, ret, null);
                 }
             }
             catch (SocketException ex)

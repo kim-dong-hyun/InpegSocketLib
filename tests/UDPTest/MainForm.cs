@@ -19,8 +19,6 @@ namespace UDPTest
     {
         private InpegUDPSocket sock = new InpegUDPSocket();
 
-        private long receiveCount = 0;
-
         public MainForm()
         {
             InitializeComponent();
@@ -54,18 +52,14 @@ namespace UDPTest
 
                 txtReceiveDataHex.Text = txtReceiveDataHex.Text.Insert(0, text);
 
-                Interlocked.Decrement(ref receiveCount);
+                if (txtReceiveDataHex.Text.Length >= 100000) txtReceiveDataHex.Text = "";
             };
 
-            if (Interlocked.Read(ref receiveCount) == 0)
-            {
-                Interlocked.Increment(ref receiveCount);
-                if (this.InvokeRequired) this.BeginInvoke(doAction);
-                else doAction();
-            }
+            if (this.InvokeRequired) this.BeginInvoke(doAction);
+            else doAction();
         }
 
-        private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size)
+        private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote)
         {
             WriteReceiveData(recvBuffer, size);
 
@@ -83,7 +77,7 @@ namespace UDPTest
             {
                 int port = int.Parse(txtRecvPort.Text.Trim());
 
-                if (sock.CreateSocket(port))
+                if (sock.CreateSocket(port, false))
                 {
                     sock.ReceiveHandler = ReceiveHandler;
                     sock.StartRecv();
@@ -114,7 +108,6 @@ namespace UDPTest
 
         private void BtnReceiveDataClear_Click(object sender, EventArgs e)
         {
-            txtReceiveData.Text = "";
             txtReceiveDataHex.Text = "";
         }
 

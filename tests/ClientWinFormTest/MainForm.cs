@@ -50,7 +50,7 @@ namespace ClientWinFormTest
             else doAction();
         }
 
-        private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size)
+        private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote)
         {
             string strBuffer = Encoding.UTF8.GetString(recvBuffer, 0, size);
             WriteReceiveData(strBuffer, recvBuffer, size);

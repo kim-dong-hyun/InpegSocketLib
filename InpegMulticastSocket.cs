@@ -15,8 +15,6 @@ namespace InpegSocketLib
 
         public ClientReceiveHandlerCallback ReceiveHandler = null;
 
-        private Socket sendSocket;
-
         public bool IsOpened
         {
             get
@@ -24,23 +22,6 @@ namespace InpegSocketLib
                 try
                 {
                     if (socket != null && socket.IsBound) return true;
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine(ex.ToString());
-                    return false;
-                }
-            }
-        }
-
-        public bool IsSendOpened
-        {
-            get
-            {
-                try
-                {
-                    if (sendSocket != null && sendSocket.IsBound) return true;
                     return false;
                 }
                 catch (Exception ex)
@@ -63,7 +44,7 @@ namespace InpegSocketLib
                 socket.Blocking = false;
                 socket.ExclusiveAddressUse = exclusive;
 
-                //if (!exclusive) socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+                if (!exclusive) socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
 
                 IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port);
                 socket.Bind(endpoint);
@@ -108,59 +89,11 @@ namespace InpegSocketLib
                 EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
                 int ret = socket.ReceiveFrom(recvBuffer, 0, recvBuffer.Length, SocketFlags.None, ref remote);
 
-                ReceiveHandler?.Invoke(socket, recvBuffer, ret);
+                ReceiveHandler?.Invoke(socket, recvBuffer, ret, (IPEndPoint)remote);
             }
             catch (Exception ex)
             {
                 Trace.WriteLine(ex.ToString());
-            }
-        }
-
-        public bool CreateSendSocket(string multicastIP, int port)
-        {
-            try
-            {
-                sendSocket = CreateSocket(ProtocolType.Udp);
-                sendSocket.Blocking = false;
-
-                IPAddress ip = IPAddress.Parse(multicastIP);
-
-                sendSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ip));
-                sendSocket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.MulticastTimeToLive, 32);
-
-                IPEndPoint endPoint = new IPEndPoint(ip, port);
-                sendSocket.Connect(endPoint);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                socket = null;
-                Trace.WriteLine(ex.ToString());
-                return false;
-            }
-        }
-
-        public int Send(byte[] buffer, int size)
-        {
-            try
-            {
-                if (!IsSendOpened) return 0;
-                return sendSocket.Send(buffer, size, SocketFlags.None);
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.ToString());
-                return 0;
-            }
-        }
-
-        public void CloseSendSocket()
-        {
-            if (sendSocket != null)
-            {
-                sendSocket.Close();
-                sendSocket = null;
             }
         }
     }

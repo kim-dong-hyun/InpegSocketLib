@@ -38,14 +38,17 @@ namespace InpegSocketLib
         {
         }
 
-        public bool CreateSocket(int port)
+        public bool CreateSocket(int port, bool exclusive)
         {
             try
             {
                 IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
                 socket = CreateSocket(ProtocolType.Udp);
+
+                if (!exclusive) socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
+
                 socket.Blocking = false;
-                socket.Bind(endPoint);
+                socket.Bind(endPoint);                
 
                 return true;
             }
@@ -84,7 +87,7 @@ namespace InpegSocketLib
                 EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
                 int ret = socket.ReceiveFrom(recvBuffer, 0, recvBuffer.Length, SocketFlags.None, ref remote);
 
-                if (ReceiveHandler != null) ReceiveHandler(socket, recvBuffer, ret);
+                if (ReceiveHandler != null) ReceiveHandler(socket, recvBuffer, ret, (IPEndPoint)remote);
             }
             catch (Exception ex)
             {

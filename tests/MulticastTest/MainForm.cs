@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -17,8 +18,7 @@ namespace MulticastTest
     public partial class MainForm : Form
     {
         private InpegMulticastSocket sock = new InpegMulticastSocket();
-
-        private long receiveCount = 0;
+        private InpegUDPSocket sendSock = new InpegUDPSocket();
 
         public MainForm()
         {
@@ -53,18 +53,14 @@ namespace MulticastTest
 
                 txtReceiveDataHex.Text = txtReceiveDataHex.Text.Insert(0, text);
 
-                Interlocked.Decrement(ref receiveCount);
+                if (txtReceiveDataHex.Text.Length > 100000) txtReceiveDataHex.Text = "";
             };
 
-            if (Interlocked.Read(ref receiveCount) == 0)
-            {
-                Interlocked.Increment(ref receiveCount);
-                if (this.InvokeRequired) this.BeginInvoke(doAction);
-                else doAction();
-            }
+            if (this.InvokeRequired) this.BeginInvoke(doAction);
+            else doAction();
         }
 
-        private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size)
+        private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote)
         {
             WriteReceiveData(recvBuffer, size);
 
@@ -116,24 +112,21 @@ namespace MulticastTest
 
         private void BtnOpenCloseSend_Click(object sender, EventArgs e)
         {
-            if (!sock.IsSendOpened)
+            if (!sendSock.IsOpened)
             {
-                string ip = textSendIP.Text.Trim();
-                int port = int.Parse(textSendPort.Text.Trim());
-
-                if (sock.CreateSendSocket(ip, port))
+                if (sendSock.CreateSocket(0, false))
                 {
-                    WriteStatusLog(string.Format("멀티캐스트 송신 {0}:{1} 열기 성공", ip, port));
+                    WriteStatusLog(string.Format("멀티캐스트 송신 열기 성공"));
                     btnOpenCloseSend.Text = "닫기";
                 }
                 else
                 {
-                    WriteStatusLog(string.Format("멀티캐스트 송신 {0}:{1} 열기 실패", ip, port));
+                    WriteStatusLog(string.Format("멀티캐스트 송신 열기 실패"));
                 }
             }
             else
             {
-                sock.CloseSendSocket();
+                sock.CloseSocket();
                 WriteStatusLog("멀티캐스트 송신 닫음");
                 btnOpenCloseSend.Text = "열기";
             }
@@ -153,12 +146,12 @@ namespace MulticastTest
         {
             sock.StopRecv();
             sock.CloseSocket();
-            sock.CloseSendSocket();
+            sendSock.CloseSocket();
         }
 
         private void BtnSendHex_Click(object sender, EventArgs e)
         {
-            if (sock.IsSendOpened)
+            if (sendSock.IsOpened)
             {
                 try
                 {
@@ -170,7 +163,11 @@ namespace MulticastTest
                         bytes[i] = (byte)Convert.ToInt32(strTokens[i], 16);
                     }
 
-                    int ret = sock.Send(bytes, bytes.Length);
+                    string ip = textSendIP.Text.Trim();
+                    int port = int.Parse(textSendPort.Text.Trim());
+
+                    EndPoint remote = new IPEndPoint(IPAddress.Parse(ip), port);
+                    int ret = sendSock.Send(bytes, bytes.Length, remote);
                 }
                 catch (Exception ex)
                 {

@@ -39,7 +39,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btnStatusClear = new System.Windows.Forms.Button();
             this.txtReceiveDataHex = new System.Windows.Forms.TextBox();
-            this.txtReceiveData = new System.Windows.Forms.TextBox();
             this.btnReceiveDataClear = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.btnSendHex = new System.Windows.Forms.Button();
@@ -141,19 +140,11 @@
             // 
             // txtReceiveDataHex
             // 
-            this.txtReceiveDataHex.Location = new System.Drawing.Point(8, 486);
+            this.txtReceiveDataHex.Location = new System.Drawing.Point(8, 360);
             this.txtReceiveDataHex.Multiline = true;
             this.txtReceiveDataHex.Name = "txtReceiveDataHex";
-            this.txtReceiveDataHex.Size = new System.Drawing.Size(467, 123);
+            this.txtReceiveDataHex.Size = new System.Drawing.Size(467, 249);
             this.txtReceiveDataHex.TabIndex = 19;
-            // 
-            // txtReceiveData
-            // 
-            this.txtReceiveData.Location = new System.Drawing.Point(8, 357);
-            this.txtReceiveData.Multiline = true;
-            this.txtReceiveData.Name = "txtReceiveData";
-            this.txtReceiveData.Size = new System.Drawing.Size(467, 123);
-            this.txtReceiveData.TabIndex = 18;
             // 
             // btnReceiveDataClear
             // 
@@ -238,7 +229,6 @@
             this.Controls.Add(this.txtSendData);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtReceiveDataHex);
-            this.Controls.Add(this.txtReceiveData);
             this.Controls.Add(this.btnReceiveDataClear);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.btnStatusClear);
@@ -272,7 +262,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnStatusClear;
         private System.Windows.Forms.TextBox txtReceiveDataHex;
-        private System.Windows.Forms.TextBox txtReceiveData;
         private System.Windows.Forms.Button btnReceiveDataClear;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnSendHex;
