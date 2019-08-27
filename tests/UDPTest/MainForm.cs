@@ -77,7 +77,7 @@ namespace UDPTest
             {
                 int port = int.Parse(txtRecvPort.Text.Trim());
 
-                if (sock.CreateSocket(port, false))
+                if (sock.CreateSocket(port, checkExclusive.Checked))
                 {
                     sock.ReceiveHandler = ReceiveHandler;
                     sock.StartRecv();

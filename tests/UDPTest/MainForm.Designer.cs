@@ -47,6 +47,7 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.txtSendData = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.checkExclusive = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // txtSendPort
@@ -85,7 +86,7 @@
             // 
             // btnOpenCloseRecv
             // 
-            this.btnOpenCloseRecv.Location = new System.Drawing.Point(203, 12);
+            this.btnOpenCloseRecv.Location = new System.Drawing.Point(297, 12);
             this.btnOpenCloseRecv.Name = "btnOpenCloseRecv";
             this.btnOpenCloseRecv.Size = new System.Drawing.Size(75, 23);
             this.btnOpenCloseRecv.TabIndex = 12;
@@ -217,11 +218,24 @@
             this.label7.TabIndex = 20;
             this.label7.Text = "전송문자";
             // 
+            // checkExclusive
+            // 
+            this.checkExclusive.AutoSize = true;
+            this.checkExclusive.Checked = true;
+            this.checkExclusive.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkExclusive.Location = new System.Drawing.Point(182, 17);
+            this.checkExclusive.Name = "checkExclusive";
+            this.checkExclusive.Size = new System.Drawing.Size(78, 16);
+            this.checkExclusive.TabIndex = 26;
+            this.checkExclusive.Text = "exclusive";
+            this.checkExclusive.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(498, 618);
+            this.Controls.Add(this.checkExclusive);
             this.Controls.Add(this.btnSendHex);
             this.Controls.Add(this.txtSendDataHex);
             this.Controls.Add(this.label6);
@@ -270,6 +284,7 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.TextBox txtSendData;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.CheckBox checkExclusive;
     }
 }
 

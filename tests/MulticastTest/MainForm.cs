@@ -126,7 +126,7 @@ namespace MulticastTest
             }
             else
             {
-                sock.CloseSocket();
+                sendSock.CloseSocket();
                 WriteStatusLog("멀티캐스트 송신 닫음");
                 btnOpenCloseSend.Text = "열기";
             }
