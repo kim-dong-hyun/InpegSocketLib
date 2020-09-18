@@ -90,7 +90,7 @@ namespace InpegSocketLib
 
         protected void DoEventLoop()
         {
-            while (isRunning == true)
+            while (isRunning)
             {
                 SingleStep();
             }
@@ -98,7 +98,7 @@ namespace InpegSocketLib
 
         public void StartEventLoop()
         {
-            if (isRunning == true) return;
+            if (isRunning) return;
 
             thread = new Thread(new ThreadStart(DoEventLoop));
             thread.IsBackground = true;

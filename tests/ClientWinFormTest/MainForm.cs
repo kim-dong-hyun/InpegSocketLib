@@ -35,25 +35,35 @@ namespace ClientWinFormTest
             else doAction();
         }
 
-        private void WriteReceiveData(string message, byte[] buffer, int size)
+        private void WriteReceiveData(byte[] buffer, int size)
         {
-            Action doAction = delegate
-            {
+            Action<byte[], int> doAction = (buffer1, size1)
+                =>
+            { 
+                Console.WriteLine("size : {0}", size1);
+
+                size1 = size1 > 100 ? 100 : size1;
+#if false
+                for (int i = 0; i < size1; i++)
+                    Console.Write("{0:X2} ", buffer1[i]);
+                Console.WriteLine();
+
+                string message = Encoding.UTF8.GetString(buffer1, 0, size1);
                 txtReceiveData.Text += message + "\r\n";
                 
-                for (int i = 0; i < size; i++)
-                    txtReceiveDataHex.Text += string.Format("{0:X2} ", buffer[i]);
+                for (int i = 0; i < size1; i++)
+                    txtReceiveDataHex.Text += string.Format("{0:X2} ", buffer1[i]);
                 txtReceiveDataHex.Text += "\r\n";
+#endif
            };
 
-            if (this.InvokeRequired) this.BeginInvoke(doAction);
-            else doAction();
+            if (this.InvokeRequired) this.BeginInvoke(doAction, buffer, size);
+            else doAction(buffer, size);
         }
 
         private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote)
         {
-            string strBuffer = Encoding.UTF8.GetString(recvBuffer, 0, size);
-            WriteReceiveData(strBuffer, recvBuffer, size);
+            WriteReceiveData(recvBuffer, size);
         }
 
         private void DisconnectHandler(Socket sock)

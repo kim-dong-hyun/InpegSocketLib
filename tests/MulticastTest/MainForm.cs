@@ -47,13 +47,15 @@ namespace MulticastTest
                 string text = "";
                 text += string.Format("size : {0} ", size);
 
+                size = size > 100 ? 100 : size;
+
                 for (int i = 0; i < size; i++)
                     text += string.Format("{0:X2} ", buffer[i]);
                 text += "\r\n";
 
                 txtReceiveDataHex.Text = txtReceiveDataHex.Text.Insert(0, text);
 
-                if (txtReceiveDataHex.Text.Length > 100000) txtReceiveDataHex.Text = "";
+                if (txtReceiveDataHex.Text.Length > 10000) txtReceiveDataHex.Text = "";
             };
 
             if (this.InvokeRequired) this.BeginInvoke(doAction);
