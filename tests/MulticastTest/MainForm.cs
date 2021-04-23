@@ -18,7 +18,6 @@ namespace MulticastTest
     public partial class MainForm : Form
     {
         private InpegMulticastSocket sock = new InpegMulticastSocket();
-        private InpegUDPSocket sendSock = new InpegUDPSocket();
 
         public MainForm()
         {
@@ -112,28 +111,6 @@ namespace MulticastTest
             }
         }
 
-        private void BtnOpenCloseSend_Click(object sender, EventArgs e)
-        {
-            if (!sendSock.IsOpened)
-            {
-                if (sendSock.CreateSocket(0, false))
-                {
-                    WriteStatusLog(string.Format("멀티캐스트 송신 열기 성공"));
-                    btnOpenCloseSend.Text = "닫기";
-                }
-                else
-                {
-                    WriteStatusLog(string.Format("멀티캐스트 송신 열기 실패"));
-                }
-            }
-            else
-            {
-                sendSock.CloseSocket();
-                WriteStatusLog("멀티캐스트 송신 닫음");
-                btnOpenCloseSend.Text = "열기";
-            }
-        }
-
         private void BtnStatusClear_Click(object sender, EventArgs e)
         {
             listBoxStatus.Items.Clear();
@@ -148,12 +125,11 @@ namespace MulticastTest
         {
             sock.StopRecv();
             sock.CloseSocket();
-            sendSock.CloseSocket();
         }
 
         private void BtnSendHex_Click(object sender, EventArgs e)
         {
-            if (sendSock.IsOpened)
+            if (sock.IsOpened)
             {
                 try
                 {
@@ -165,11 +141,11 @@ namespace MulticastTest
                         bytes[i] = (byte)Convert.ToInt32(strTokens[i], 16);
                     }
 
-                    string ip = textSendIP.Text.Trim();
-                    int port = int.Parse(textSendPort.Text.Trim());
+                    string ip = textRecvIP.Text.Trim();
+                    int port = int.Parse(textRecvPort.Text.Trim());
 
                     EndPoint remote = new IPEndPoint(IPAddress.Parse(ip), port);
-                    int ret = sendSock.Send(bytes, bytes.Length, remote);
+                    int ret = sock.Send(bytes, bytes.Length, remote);
                 }
                 catch (Exception ex)
                 {

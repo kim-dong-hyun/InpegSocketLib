@@ -43,11 +43,11 @@ namespace ClientWinFormTest
                 Console.WriteLine("size : {0}", size1);
 
                 size1 = size1 > 100 ? 100 : size1;
-#if false
+
                 for (int i = 0; i < size1; i++)
                     Console.Write("{0:X2} ", buffer1[i]);
                 Console.WriteLine();
-
+#if false
                 string message = Encoding.UTF8.GetString(buffer1, 0, size1);
                 txtReceiveData.Text += message + "\r\n";
                 

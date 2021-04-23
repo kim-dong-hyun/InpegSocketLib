@@ -61,14 +61,16 @@ namespace UDPTest
 
         private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote)
         {
-            WriteReceiveData(recvBuffer, size);
-
             Console.WriteLine("size : {0}", size);
 
-            for (int i = 0; i < size; i++)
+            int size1 = size < 20 ? size : 100;
+
+            for (int i = 0; i < size1; i++)
                 Console.Write("{0:X2} ", recvBuffer[i]);
             Console.WriteLine();
             Console.WriteLine("--------------------------------------------------------");
+
+            WriteReceiveData(recvBuffer, size);
         }
 
         private void BtnOpenCloseRecv_Click(object sender, EventArgs e)

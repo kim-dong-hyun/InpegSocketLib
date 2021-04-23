@@ -41,21 +41,14 @@
             this.textRecvIP = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnSendHex = new System.Windows.Forms.Button();
-            this.txtSendDataHex = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.btnOpenCloseSend = new System.Windows.Forms.Button();
-            this.textSendPort = new System.Windows.Forms.TextBox();
-            this.textSendIP = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtSendDataHex = new System.Windows.Forms.TextBox();
+            this.btnSendHex = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -122,7 +115,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnSendHex);
+            this.groupBox1.Controls.Add(this.txtSendDataHex);
             this.groupBox1.Controls.Add(this.checkExclusive);
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.btnOpenClose);
             this.groupBox1.Controls.Add(this.textRecvPort);
             this.groupBox1.Controls.Add(this.textRecvIP);
@@ -130,7 +126,7 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(3, 5);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(472, 92);
+            this.groupBox1.Size = new System.Drawing.Size(472, 119);
             this.groupBox1.TabIndex = 33;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "멀티캐스트 수신";
@@ -189,95 +185,9 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "멀티캐스트 수신 IP";
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.btnSendHex);
-            this.groupBox2.Controls.Add(this.txtSendDataHex);
-            this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.btnOpenCloseSend);
-            this.groupBox2.Controls.Add(this.textSendPort);
-            this.groupBox2.Controls.Add(this.textSendIP);
-            this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.label3);
-            this.groupBox2.Location = new System.Drawing.Point(3, 103);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(472, 128);
-            this.groupBox2.TabIndex = 34;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "멀티캐스트 송신";
-            // 
-            // btnSendHex
-            // 
-            this.btnSendHex.Location = new System.Drawing.Point(384, 88);
-            this.btnSendHex.Name = "btnSendHex";
-            this.btnSendHex.Size = new System.Drawing.Size(75, 23);
-            this.btnSendHex.TabIndex = 40;
-            this.btnSendHex.Text = "전송";
-            this.btnSendHex.UseVisualStyleBackColor = true;
-            this.btnSendHex.Click += new System.EventHandler(this.BtnSendHex_Click);
-            // 
-            // txtSendDataHex
-            // 
-            this.txtSendDataHex.Location = new System.Drawing.Point(76, 88);
-            this.txtSendDataHex.Name = "txtSendDataHex";
-            this.txtSendDataHex.Size = new System.Drawing.Size(292, 21);
-            this.txtSendDataHex.TabIndex = 39;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(13, 93);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(57, 12);
-            this.label7.TabIndex = 38;
-            this.label7.Text = "전송 HEX";
-            // 
-            // btnOpenCloseSend
-            // 
-            this.btnOpenCloseSend.Location = new System.Drawing.Point(384, 20);
-            this.btnOpenCloseSend.Name = "btnOpenCloseSend";
-            this.btnOpenCloseSend.Size = new System.Drawing.Size(75, 23);
-            this.btnOpenCloseSend.TabIndex = 37;
-            this.btnOpenCloseSend.Text = "열기";
-            this.btnOpenCloseSend.UseVisualStyleBackColor = true;
-            this.btnOpenCloseSend.Click += new System.EventHandler(this.BtnOpenCloseSend_Click);
-            // 
-            // textSendPort
-            // 
-            this.textSendPort.Location = new System.Drawing.Point(157, 59);
-            this.textSendPort.Name = "textSendPort";
-            this.textSendPort.Size = new System.Drawing.Size(111, 21);
-            this.textSendPort.TabIndex = 36;
-            // 
-            // textSendIP
-            // 
-            this.textSendIP.Location = new System.Drawing.Point(157, 26);
-            this.textSendIP.Name = "textSendIP";
-            this.textSendIP.Size = new System.Drawing.Size(111, 21);
-            this.textSendIP.TabIndex = 35;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(13, 62);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(121, 12);
-            this.label6.TabIndex = 34;
-            this.label6.Text = "멀티캐스트 송신 포트";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 31);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(108, 12);
-            this.label3.TabIndex = 33;
-            this.label3.Text = "멀티캐스트 송신 IP";
-            // 
             // panel1
             // 
             this.panel1.Controls.Add(this.groupBox1);
-            this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -315,6 +225,32 @@
             this.panel4.Size = new System.Drawing.Size(492, 28);
             this.panel4.TabIndex = 25;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(13, 85);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(57, 12);
+            this.label7.TabIndex = 38;
+            this.label7.Text = "전송 HEX";
+            // 
+            // txtSendDataHex
+            // 
+            this.txtSendDataHex.Location = new System.Drawing.Point(76, 80);
+            this.txtSendDataHex.Name = "txtSendDataHex";
+            this.txtSendDataHex.Size = new System.Drawing.Size(292, 21);
+            this.txtSendDataHex.TabIndex = 39;
+            // 
+            // btnSendHex
+            // 
+            this.btnSendHex.Location = new System.Drawing.Point(384, 80);
+            this.btnSendHex.Name = "btnSendHex";
+            this.btnSendHex.Size = new System.Drawing.Size(75, 23);
+            this.btnSendHex.TabIndex = 40;
+            this.btnSendHex.Text = "전송";
+            this.btnSendHex.UseVisualStyleBackColor = true;
+            this.btnSendHex.Click += new System.EventHandler(this.BtnSendHex_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -328,8 +264,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
@@ -354,20 +288,14 @@
         private System.Windows.Forms.TextBox textRecvIP;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button btnSendHex;
-        private System.Windows.Forms.TextBox txtSendDataHex;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Button btnOpenCloseSend;
-        private System.Windows.Forms.TextBox textSendPort;
-        private System.Windows.Forms.TextBox textSendIP;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkExclusive;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Button btnSendHex;
+        private System.Windows.Forms.TextBox txtSendDataHex;
+        private System.Windows.Forms.Label label7;
     }
 }
 

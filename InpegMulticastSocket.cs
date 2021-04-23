@@ -96,5 +96,19 @@ namespace InpegSocketLib
                 Trace.WriteLine(ex.ToString());
             }
         }
+
+        public int Send(byte[] buffer, int size, EndPoint remote)
+        {
+            try
+            {
+                if (!IsOpened) return 0;
+                return socket.SendTo(buffer, size, SocketFlags.None, remote);
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.ToString());
+                return 0;
+            }
+        }
     }
 }
