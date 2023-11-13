@@ -32,13 +32,11 @@ namespace InpegSocketLib
                 {
                     server.Task.UnregisterSocketHandler(clientSock);
                     server.clientList.Remove(this);
-                    if (server.ClientDisconnectHandler != null)
-                        server.ClientDisconnectHandler(this);
+                    server.ClientDisconnectHandler?.Invoke(this);
                 }
                 else
                 {
-                    if (server.ReceiveHandler != null)
-                        server.ReceiveHandler(this, recvBuffer, ret);
+                    server.ReceiveHandler?.Invoke(this, recvBuffer, ret);
                 }
             }
             catch (SocketException ex)
@@ -48,8 +46,7 @@ namespace InpegSocketLib
                 server.Task.UnregisterSocketHandler(clientSock);
                 server.clientList.Remove(this);
 
-                if (server.ClientDisconnectHandler != null)
-                    server.ClientDisconnectHandler(this);
+                server.ClientDisconnectHandler?.Invoke(this);
             }
             catch (Exception ex)
             {
@@ -139,15 +136,14 @@ namespace InpegSocketLib
             clientList.Add(client);
             task.RegisterSocketHandler(clientSock, client.IncomingPacketHandler, this);
 
-            if (ClientConnectHandler != null)
-                ClientConnectHandler(client);
+            ClientConnectHandler?.Invoke(client);
         }
 
         public void DisconnectAllClient()
         {
             foreach (InpegClientSession client in clientList)
             {
-                client.clientSock.Shutdown(SocketShutdown.Send);
+                client.clientSock.Shutdown(SocketShutdown.Receive);
             }
         }
     }

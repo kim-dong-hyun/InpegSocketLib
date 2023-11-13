@@ -13,7 +13,7 @@ namespace InpegSocketLib
 
         protected byte[] recvBuffer = new byte[1024 * 1024];
 
-        public ClientReceiveHandlerCallback ReceiveHandler = null;
+        public event ClientReceiveHandlerCallback ReceiveHandler = null;
 
         public bool IsOpened
         {
@@ -46,7 +46,12 @@ namespace InpegSocketLib
                 socket = CreateSocket(ProtocolType.Udp);
 
                 if (!exclusive) socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1);
-
+#if true
+                uint IOC_IN = 0x80000000;
+                uint IOC_VENDOR = 0x18000000;
+                uint SIO_UDP_CONNRESET = IOC_IN | IOC_VENDOR | 12;
+                socket.IOControl((int)SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
+#endif
                 socket.Blocking = false;
                 socket.Bind(endPoint);                
 
@@ -87,7 +92,7 @@ namespace InpegSocketLib
                 EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
                 int ret = socket.ReceiveFrom(recvBuffer, 0, recvBuffer.Length, SocketFlags.None, ref remote);
 
-                if (ReceiveHandler != null) ReceiveHandler(socket, recvBuffer, ret, (IPEndPoint)remote);
+                ReceiveHandler?.Invoke(socket, (IPEndPoint)remote, recvBuffer, ret);
             }
             catch (Exception ex)
             {

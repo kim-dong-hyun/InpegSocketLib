@@ -23,6 +23,8 @@ namespace UDPTest
         {
             InitializeComponent();
 
+            sock.ReceiveHandler += ReceiveHandler;
+
             SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
             UpdateStyles();
         }
@@ -41,13 +43,13 @@ namespace UDPTest
 
         private void WriteReceiveData(byte[] buffer, int size)
         {
-            Action doAction = delegate
+            Action<byte[], int> doAction = (buffer1, size1) =>
             {
                 string text = "";
-                text += string.Format("size : {0} ", size);
+                text += string.Format("size : {0} ", size1);
 
-                for (int i = 0; i < size; i++)
-                    text += string.Format("{0:X2} ", buffer[i]);
+                for (int i = 0; i < buffer1.Length; i++)
+                    text += string.Format("{0:X2} ", buffer1[i]);
                 text += "\r\n";
 
                 txtReceiveDataHex.Text = txtReceiveDataHex.Text.Insert(0, text);
@@ -55,11 +57,14 @@ namespace UDPTest
                 if (txtReceiveDataHex.Text.Length >= 100000) txtReceiveDataHex.Text = "";
             };
 
-            if (this.InvokeRequired) this.BeginInvoke(doAction);
-            else doAction();
+            byte[] buffer2 = new byte[size];
+            Buffer.BlockCopy(buffer, 0, buffer2, 0, size);
+
+            if (this.InvokeRequired) this.BeginInvoke(doAction, buffer2, size);
+            else doAction(buffer2, size);
         }
 
-        private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote)
+        private void ReceiveHandler(Socket sock, IPEndPoint remote, byte[] recvBuffer, int size)
         {
             Console.WriteLine("size : {0}", size);
 
@@ -81,7 +86,6 @@ namespace UDPTest
 
                 if (sock.CreateSocket(port, checkExclusive.Checked))
                 {
-                    sock.ReceiveHandler = ReceiveHandler;
                     sock.StartRecv();
 
                     WriteStatusLog(string.Format("UDP 포트 {0} 열기 성공", port));
@@ -133,7 +137,8 @@ namespace UDPTest
             {
                 try
                 {
-                    string[] strTokens = txtSendDataHex.Text.Trim().Split(' ');
+                    char[] chars = { ' ' };
+                    string[] strTokens = txtSendDataHex.Text.Trim().Split(chars, StringSplitOptions.RemoveEmptyEntries);
                     byte[] bytes = new byte[strTokens.Length];
 
                     for (int i = 0; i < strTokens.Length; i++)

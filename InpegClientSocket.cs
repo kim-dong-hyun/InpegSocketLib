@@ -9,7 +9,7 @@ using System.Collections;
 namespace InpegSocketLib
 {
     public delegate void ClientConnectHandlerCallback(Socket sock);
-    public delegate void ClientReceiveHandlerCallback(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote);
+    public delegate void ClientReceiveHandlerCallback(Socket sock, IPEndPoint remote, byte[] recvBuffer, int size);
 
     public class InpegClientSocket : InpegSocket
     {
@@ -31,8 +31,8 @@ namespace InpegSocketLib
         }
         protected byte[] recvBuffer = new byte[1024 * 1024];
 
-        public ClientReceiveHandlerCallback ReceiveHandler = null;
-        public ClientConnectHandlerCallback DisconnectHandler = null;
+        public event ClientReceiveHandlerCallback ReceiveHandler;
+        public event ClientConnectHandlerCallback DisconnectHandler;
 
         public InpegClientSocket()
         {
@@ -150,8 +150,7 @@ namespace InpegSocketLib
                 }
                 else
                 {
-                    if (ReceiveHandler != null)
-                        ReceiveHandler(socket, recvBuffer, ret, null);
+                    ReceiveHandler?.Invoke(socket, null, recvBuffer, ret);
                 }
             }
             catch (SocketException ex)

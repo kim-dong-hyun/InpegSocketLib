@@ -21,6 +21,9 @@ namespace ClientWinFormTest
         public MainForm()
         {
             InitializeComponent();
+
+            client.ReceiveHandler += ReceiveHandler;
+            client.ReceiveHandler += ReceiveHandler;
         }
 
         private void WriteStatusLog(string message)
@@ -61,7 +64,7 @@ namespace ClientWinFormTest
             else doAction(buffer, size);
         }
 
-        private void ReceiveHandler(Socket sock, byte[] recvBuffer, int size, IPEndPoint remote)
+        private void ReceiveHandler(Socket sock, IPEndPoint remote, byte[] recvBuffer, int size)
         {
             WriteReceiveData(recvBuffer, size);
         }
@@ -83,9 +86,6 @@ namespace ClientWinFormTest
         {
             if (!client.IsConnected)
             {
-                client.ReceiveHandler = ReceiveHandler;
-                client.DisconnectHandler = DisconnectHandler;
-
                 WriteStatusLog("서버에 접속중...");
 
                 Action doAction = delegate

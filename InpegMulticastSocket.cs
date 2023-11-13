@@ -15,6 +15,8 @@ namespace InpegSocketLib
 
         public ClientReceiveHandlerCallback ReceiveHandler = null;
 
+        private IPAddress multicastIP;
+
         public bool IsOpened
         {
             get
@@ -49,8 +51,10 @@ namespace InpegSocketLib
                 IPEndPoint endpoint = new IPEndPoint(IPAddress.Any, port);
                 socket.Bind(endpoint);
 
-                IPAddress ip = IPAddress.Parse(multicastIP);
-                socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ip, IPAddress.Any));                
+                IPAddress ipAddress = IPAddress.Parse(multicastIP);
+                socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.AddMembership, new MulticastOption(ipAddress, IPAddress.Any));
+
+                this.multicastIP = ipAddress;
 
                 return true;
             }
@@ -80,6 +84,8 @@ namespace InpegSocketLib
 
             task.StopEventLoop();
             isRunning = false;
+
+            socket.SetSocketOption(SocketOptionLevel.IP, SocketOptionName.DropMembership, new MulticastOption(multicastIP, IPAddress.Any));
         }
 
         private void IncomingPacketHandler(object data)
@@ -89,7 +95,7 @@ namespace InpegSocketLib
                 EndPoint remote = new IPEndPoint(IPAddress.Any, 0);
                 int ret = socket.ReceiveFrom(recvBuffer, 0, recvBuffer.Length, SocketFlags.None, ref remote);
 
-                ReceiveHandler?.Invoke(socket, recvBuffer, ret, (IPEndPoint)remote);
+                ReceiveHandler?.Invoke(socket, (IPEndPoint)remote, recvBuffer, ret);
             }
             catch (Exception ex)
             {
